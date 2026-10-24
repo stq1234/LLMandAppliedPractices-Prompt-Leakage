@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+notes/peer117.txt
+notes/peer120.txt
+results/*.tmp
+reproduction/
