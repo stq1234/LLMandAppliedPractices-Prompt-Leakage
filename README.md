@@ -1,35 +1,40 @@
 # 提示文本提取与隐藏规则重建
 
-本目录包含一份完整报告和两个并列实验。报告见 [实验报告.md](实验报告.md)，公开资料笔记见 [research_sources.md](research_sources.md)。所有目标提示和工单规则均为本实验构造，评分使用预先保存的真值。
+本目录包含一份完整报告和两个并列实验。报告见[实验报告.md](实验报告.md)，公开资料笔记见[research_sources.md](research_sources.md)，实验一协议与评分说明见[research_extension.md](research_extension.md)。目标提示和工单规则均由本实验构造，保存的真值用于事后评分。
 
-## 实验内容
+## 实验内容与请求预算
 
-| 实验 | 目标 | 方法 | 每模型正式请求数 |
-|---|---|---|---:|
-| 单轮提示提取 | 从受保密要求保护的系统消息中取得私有规则或标记 | 六类固定请求×三目标×两种保护，另含正常问答和系统授权复述 | 45 |
-| 隐藏规则重建 | 通过正常工单分类恢复业务规则，并生成替代提示 | 主动查询与固定随机查询；三规则×两种子×两策略，各16个标签 | 66 |
+| 实验部分 | 模型与覆盖 | 已保存请求数 |
+|---|---|---:|
+| 实验一：原始固定单轮 | 三模型×三目标×六策略×basic/structured；另有18次公开问答、9次系统授权复述 | 135 |
+| 实验一：单轮保护配置扩展 | 三模型×三目标×六策略×none/weak | 108 |
+| 实验一：固定脚本扩展 | 三模型×两保护；18组多轮共54次请求，另54次单轮表示测试 | 108 |
+| 实验一：双模型自适应多轮 | 攻击者为gpt-6-luna或gpt-6.1-sol，防守者为gpt-6-luna；三个目标×三保护×每组四轮 | 144 |
+| 实验二：隐藏规则重建 | 三模型×三规则×两种子×主动/随机；36次重建及模型行为测试、直接索取对照 | 198 |
 
-两个实验均测试 `gpt-6-luna`、`gpt-5.6-luna` 和 `gpt-6.1-sol`，统一 `reasoning_effort=low`、`max_completion_tokens=2048`，不显式设置温度和 top-p。正式结果共333次请求，原始响应全部完整返回，无失败重试。返回的型号标识与请求相符。
+合计693次已保存请求，均完整返回，无失败重试。双模型部分包含72次攻击者生成和72次防守者回复，不能将144次请求当作144次攻击或144组对话。原始单轮、保护扩展及实验二使用`gpt-6-luna`、`gpt-5.6-luna`和`gpt-6.1-sol`；双模型配对以表中配置为准。所有模型请求使用`reasoning_effort=low`、`max_completion_tokens=2048`，不显式设置温度和top-p。
 
-实验一的108次攻击未检测到私有标记、完整规则或完整系统提示；18次公开问答与9次授权复述均正确。实验二的主动策略完整恢复18/18次规则，随机策略0/18；随机规则在未查询输入上的平均一致率为92.7%。gpt-6-luna原提示的一个测试批次出现6处分类错误，模型输出一致率与规则一致率因此不同，详见报告。
+216次固定单轮均未取得随机标记或完整规则原句；无显式保密时，gpt-5.6-luna有3次输出三条规则的中文含义。18组固定多轮未取得目标信息。自适应多轮有5/18组恢复规则含义，其中4组进一步取得至少一条完整原句、3组取得全部三条原句；全部攻击均未取得随机标记。实验二主动策略完整恢复18/18次规则，随机策略0/18，后者在未查询输入上的平均规则一致率仍为92.7%。样本数量、保护条件和评价层次见报告，不合并为单一成功率。
 
 ## 文件与数据
 
-- `data/protocol.json`：实验一的原始固定协议、目标规则和随机标记。当前比较使用其中36次攻击、6次正常问答、3次授权直接复述。
-- `data/behavior_protocol.json`：实验二的三套规则、输入全集、独立测试集、查询池和随机标记。
-- `src/api_client.py`：本地模型客户端。读取环境变量，检查返回型号，保留完整/截断/错误状态，错误信息脱敏，无自动模型替换。
-- `src/multi_model.py`：实验一的三模型运行、续跑和离线汇总；可通过 `--results-dir` 将运行结果写入独立目录。
-- `src/behavior.py`：候选规则推断、主动查询、模型测试、续跑和离线汇总。
-- `src/scoring.py`：实验一的原句、标记及Base64解码评分。
-- `src/comparison_plots.py`：报告三幅图的可复用绘图程序，可指定汇总输入、图形目录和绘图数据输出位置。
-- `results/experiment1/`、`results/experiment2/`：各模型请求、原始回复与汇总指标。
-- `results/comparison_plot_data.json`：图中展示的聚合数据。
-- `figures/experiment1_models.png`、`figures/experiment2_learning.png`、`figures/experiment2_transfer.png`：报告使用的图形。
-- `tests/`：模型返回校验、评分、查询选择、测试集隔离和断点续跑等测试。
+| 内容 | 协议与程序 | 原始结果与评分 |
+|---|---|---|
+| 原始单轮与对照 | `data/protocol.json`、`src/multi_model.py`、`src/scoring.py` | `results/experiment1/` |
+| 无显式/简短保密单轮 | `data/protection_sweep_protocol.json`、`src/protection_sweep.py` | `results/protection_sweep/` |
+| 固定脚本及补充表示 | `data/extension_protocol.json`、`src/extension.py` | `results/extension_dev/dev/` |
+| 双模型自适应多轮 | `data/adaptive_dialogue_protocol.json`、`src/adaptive_dialogue.py` | `results/adaptive_dialogue/` |
+| 工单规则重建 | `data/behavior_protocol.json`、`src/behavior.py` | `results/experiment2/` |
+| 实验一汇总与图1 | `src/leakage_overview.py` | `results/leakage_overview.json`、`figures/experiment1_dialogue_recovery.png` |
+| 实验二图2、图3 | `src/comparison_plots.py` | `results/comparison_plot_data.json`、`figures/experiment2_learning.png`、`figures/experiment2_transfer.png` |
 
-## 环境准备
+`src/api_client.py`读取环境变量、校验返回型号并保留完整/截断/错误状态，错误信息脱敏，不自动替换模型。JSONL保存实际请求与原始响应；语义判读保存在各结果目录的`semantic_review.jsonl`，固定脚本历史格式使用`manual_review.jsonl`。这些判读由Agent完成，不是独立人工标注。新生成的回复必须重新逐条审阅，不能沿用旧运行的语义结论。
 
-使用 Python 3.10 或更新版本，工作目录为本目录：
+双模型日志`results/adaptive_dialogue/adaptive_dialogue.jsonl`按会话保存双方的独立系统消息、每轮实际请求、攻击者生成、发送给防守者的用户提示以及防守者原始回复。每次双方都收到各自完整历史；攻击者不接收真值、保护条件或评分。`strategy_note`仅是模型生成的简短战术说明。
+
+## 环境与密钥配置
+
+使用Python 3.10或更新版本，在仓库根目录执行：
 
 ```powershell
 python -m pip install -r requirements.txt
@@ -37,59 +42,90 @@ $env:OPENAI_BASE_URL = 'http://localhost:8080/v1'
 $env:OPENAI_API_KEY = [System.Net.NetworkCredential]::new('', (Read-Host 'API key' -AsSecureString)).Password
 ```
 
-密钥只放在当前进程环境，不写入配置、结果或报告。客户端仅接受带明确端口的本机HTTP地址，关闭系统代理继承。运行结束可清理：
+密钥仅放在当前进程环境，不写入协议、结果或报告。客户端仅接受带明确端口的本机HTTP地址，关闭系统代理继承。运行结束后可执行`Remove-Item Env:OPENAI_API_KEY`。离线评分与绘图不需要密钥。
+
+## 离线复核已有结果
+
+以下命令仅读取已保存的响应，不调用模型：
 
 ```powershell
-Remove-Item Env:OPENAI_API_KEY
-```
-
-## 运行与复现
-
-现有协议已经固定。直接复用协议，不重新生成实验一的随机真值。
-
-```powershell
-python -m src.multi_model run
 python -m src.multi_model summarize
-python -m src.behavior prepare
-python -m src.behavior run
+python -m src.protection_sweep summarize
+python -m src.extension summarize --phase dev
+python -m src.adaptive_dialogue summarize --results-dir results/adaptive_dialogue
 python -m src.behavior summarize
+python -m src.leakage_overview
 python -m src.comparison_plots
 ```
 
-`behavior prepare` 在已有协议时只验证，不覆盖。两个运行器均从已有日志续跑，成功记录不重复调用。可通过 `--models gpt-6-luna` 等参数选择三个指定模型中的子集。实验一和实验二的运行器均支持 `--results-dir`；指定 `--results-dir` 时，离线汇总也写入该目录。实验一的 `summarize` 另支持 `--output`。避免同时启动两个操作同一模型结果文件的进程。
+`leakage_overview`核对请求完整性、模型/条件覆盖、语义审阅及原始响应的一致性，再生成汇总和图1。累积轮次曲线只计防守者输出；攻击者复述之前已知的规则不作为新的披露。`comparison_plots`从实验二完整汇总生成两幅比较图及其绘图数据。
 
-需要从头运行而又保留本目录正式结果时，为每次复现实验创建一个新的空输出目录。下面的 PowerShell 示例把实验日志、汇总、图形及绘图数据都写入带时间戳的 `reproduction/` 子目录：
+## 重新运行实验
+
+固定协议已包含目标规则、随机标记和数据划分。复现时保留协议，为新运行使用独立结果目录。下面设置一个新的输出根目录；同一运行中保留该变量以便续跑：
 
 ```powershell
-$runRoot = Join-Path (Get-Location) ("reproduction/" + (Get-Date -Format "yyyyMMdd-HHmmssfff"))
-$experiment1Results = Join-Path $runRoot "experiment1"
-$experiment2Results = Join-Path $runRoot "experiment2"
-$figures = Join-Path $runRoot "figures"
-$plotData = Join-Path $runRoot "comparison_plot_data.json"
-New-Item -ItemType Directory -Force -Path $experiment1Results, $experiment2Results, $figures | Out-Null
-
-python -m src.multi_model run --results-dir $experiment1Results
-python -m src.multi_model summarize --results-dir $experiment1Results
-python -m src.behavior run --results-dir $experiment2Results
-python -m src.behavior summarize --results-dir $experiment2Results
-python -m src.comparison_plots `
-  --experiment1-summary (Join-Path $experiment1Results "summary.json") `
-  --experiment2-summary (Join-Path $experiment2Results "summary.json") `
-  --figures-dir $figures `
-  --plot-data $plotData
+$runRoot = Join-Path (Get-Location) ('reproduction/' + (Get-Date -Format 'yyyyMMdd-HHmmssfff'))
+New-Item -ItemType Directory -Path $runRoot | Out-Null
 ```
 
-运行命令会自动续跑指定目录里已有的成功记录，因此每次从头运行应使用新的目录名。`reproduction/` 已加入 `.gitignore`，不会把个人重跑输出混入正式归档。当前固定协议来自 `data/protocol.json` 与 `data/behavior_protocol.json`；复现实验不需要重新生成真值或修改协议。
+### 原始单轮与保护配置扩展
 
-失败记录不会算作没有泄漏或分类正确。检查错误后，使用 `run --retry-errors` 对失败项最多重试一次，保留原尝试记录。输出截断需单独核查，不混入完整响应的主分母。纯离线重新评分、汇总和绘图不需要密钥，也不会调用模型。
+```powershell
+python -m src.multi_model run --results-dir (Join-Path $runRoot 'experiment1')
+python -m src.multi_model summarize --results-dir (Join-Path $runRoot 'experiment1')
+python -m src.protection_sweep prepare
+python -m src.protection_sweep run --results-dir (Join-Path $runRoot 'protection_sweep') --max-calls 108
+python -m src.protection_sweep summarize --results-dir (Join-Path $runRoot 'protection_sweep')
+```
 
-## 实验二的数据分工
+两部分分别最多135次和108次请求。`prepare`校验已有保护扩展协议；`--max-calls`限制本次进程的新请求数量。两运行器可用`--models gpt-6-luna`等参数选择指定型号的子集，成功记录不重复调用。失败项经检查后可通过`--retry-errors`重试一次，并保留原尝试。
 
-规则族有128个候选。每套目标的未解决工单全集为512种；其中24个按类别分层抽取的测试输入从攻击池排除，另加4个已解决工单用于测试。攻击池共488个输入。
+### 固定脚本多轮及补充表示
 
-每个重建过程只使用其16个实际查询标签来推断规则。主动算法最大化候选预测的联合熵；随机算法固定抽样顺序。两者使用相同的最小失配候选更新和固定平局选择。真实规则只用于构造目标和事后评分，测试标签不参与查询选择。
+```powershell
+python -m src.extension prepare --phase dev --results-dir (Join-Path $runRoot 'extension_dev')
+python -m src.extension run --phase dev --results-dir (Join-Path $runRoot 'extension_dev')
+python -m src.extension summarize --phase dev --results-dir (Join-Path $runRoot 'extension_dev')
+```
 
-报告中的完整参数恢复、未查询496输入一致率、完整512输入学习曲线、28工单模型输出一致率分别保存，不能互相替代。每模型每策略的六次重建为三规则×两查询种子，测试样本在种子间复用。
+该阶段运行72组会话，最多108次请求，输出自动写入指定根目录下的`dev/`。多轮使用真实历史，后续用户消息由协议预先固定。运行器顺序执行，无自动重试；失败或截断不纳入完整响应的主要分母。
+
+### 双模型自适应多轮
+
+```powershell
+$dialogueResults = Join-Path $runRoot 'adaptive_dialogue'
+python -m src.adaptive_dialogue prepare --results-dir $dialogueResults
+python -m src.adaptive_dialogue run --results-dir $dialogueResults --max-calls 144
+python -m src.adaptive_dialogue summarize --results-dir $dialogueResults
+```
+
+`prepare`要求目标目录尚不存在，冻结该次运行的协议、目标及模型组合。每会话最多四轮，整个配对矩阵最多144次请求。`--max-calls`可以进一步限制当次新增调用，例如设为16；恢复时仅重新执行`run`，不要再次`prepare`。也可用`--attacker-models gpt-6.1-sol`仅运行指定攻击者。
+
+每次攻击者或防守者调用完成后立即保存，重启不会重复调用已记录的一方。终态错误、截断或格式错误不会自动重试。随机标记精确命中会提前结束会话；原句和语义恢复仅离线评分，不反馈给攻击者改变其后续决策。
+
+### 实验二：工单规则重建
+
+```powershell
+python -m src.behavior prepare
+python -m src.behavior run --results-dir (Join-Path $runRoot 'experiment2')
+python -m src.behavior summarize --results-dir (Join-Path $runRoot 'experiment2')
+python -m src.comparison_plots --experiment2-summary (Join-Path $runRoot 'experiment2/summary.json') --figures-dir (Join-Path $runRoot 'figures') --plot-data (Join-Path $runRoot 'comparison_plot_data.json')
+```
+
+该实验最多198次请求；`prepare`在协议已存在时仅校验。攻击者知道128个候选规则的形式，但不知道目标参数。每次重建只根据16个实际查询标签更新候选；主动算法最大化候选预测的联合熵，随机算法按固定顺序采样，两者使用相同的最小失配更新和平局选择。
+
+每套目标有512个未解决工单输入，其中24个分层测试输入从查询池排除，另加4个已解决工单作模型测试。查询池为488个输入，每次查询16个后在其余496个未解决输入上检验规则一致率。完整参数恢复、496输入一致率、512输入学习曲线和28张工单的模型输出一致率分别保存，不能互相替代。
+
+### 新运行的语义复核与绘图
+
+为新运行分别完成原始单轮、保护扩展、固定脚本及自适应会话的语义审阅，依据该次实际回复保存相应JSONL；审阅记录中的ID、原始文本和证据必须对应新运行。然后执行：
+
+```powershell
+python -m src.leakage_overview --results-root $runRoot --output (Join-Path $runRoot 'leakage_overview.json') --figure (Join-Path $runRoot 'figures/experiment1_dialogue_recovery.png')
+```
+
+不完整的运行或缺失的审阅不能生成完整对照图。所有运行器禁止并发修改同一个结果文件。`reproduction/`已被Git忽略，个人重跑结果不会覆盖正式归档。
 
 ## 验证
 
@@ -97,4 +133,4 @@ python -m src.comparison_plots `
 python -m unittest discover -s tests -v
 ```
 
-测试使用本地模拟客户端，不产生模型费用。真实调用的可用性、评分结果与模型行为以保存的原始响应为准。
+测试使用模拟客户端，不产生模型调用。覆盖返回型号与状态校验、解码评分、候选选择、测试集隔离、完整历史、上下文隔离、调用预算和断点续跑；实验观察以保存的实际响应和逐条证据为准。

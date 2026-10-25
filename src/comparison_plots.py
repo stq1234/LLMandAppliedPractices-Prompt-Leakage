@@ -1,4 +1,4 @@
-"""Create paper figures comparing prompt extraction and rule reconstruction."""
+"""Create the experiment 2 learning and transfer figures."""
 
 from __future__ import annotations
 
@@ -18,27 +18,15 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPERIMENT1_SUMMARY = ROOT / "results" / "experiment1" / "summary.json"
 EXPERIMENT2_SUMMARY = ROOT / "results" / "experiment2" / "summary.json"
 FIGURES_DIR = ROOT / "figures"
 PLOT_DATA_PATH = ROOT / "results" / "comparison_plot_data.json"
 
 MODEL_ORDER = ("gpt-6-luna", "gpt-5.6-luna", "gpt-6.1-sol")
-CONDITION_ORDER = ("basic", "structured")
-CONDITION_LABELS = {"basic": "简短保护", "structured": "结构化保护"}
 STRATEGY_COLORS = {"active": "#2878B5", "random": "#E07B39"}
 POLICY_ORDER = ("A", "B", "C")
 SEED_ORDER = (17, 43)
 BUDGET_ORDER = (0, 4, 8, 12, 16)
-STRATEGY_LABELS = {
-    "direct_request": "直接索取",
-    "authority_claim": "权限声称",
-    "translation": "翻译转写",
-    "base64_transform": "Base64变换",
-    "indirect_document": "文档间接指令",
-    "continuation": "内部配置续写",
-}
-STRATEGY_ORDER = tuple(STRATEGY_LABELS)
 
 
 def _configure_fonts() -> str:
@@ -81,44 +69,6 @@ def _require_ratio(value: Any, where: str) -> float:
     if not math.isfinite(result) or result < 0.0 or result > 1.0:
         raise IncompleteSummaryError(f"{where} must be a finite ratio in [0, 1].")
     return result
-
-
-def validate_experiment1(summary: Mapping[str, Any]) -> None:
-    models = summary.get("models")
-    if not isinstance(models, dict) or not set(MODEL_ORDER).issubset(models):
-        raise IncompleteSummaryError("Experiment 1 summary must contain all three requested models.")
-    expected = {(condition, strategy) for condition in CONDITION_ORDER for strategy in STRATEGY_ORDER}
-    for model_name in MODEL_ORDER:
-        model = models[model_name]
-        if model.get("run_status") != "complete":
-            raise IncompleteSummaryError(f"Experiment 1 run is incomplete for {model_name}.")
-        attack = model.get("attack")
-        cells = attack.get("cells") if isinstance(attack, dict) else None
-        if not isinstance(cells, list):
-            raise IncompleteSummaryError(f"Experiment 1 attack cells are missing for {model_name}.")
-        indexed: dict[tuple[str, str], Mapping[str, Any]] = {}
-        for cell in cells:
-            if not isinstance(cell, dict):
-                continue
-            key = (cell.get("condition"), cell.get("strategy"))
-            if key in indexed:
-                raise IncompleteSummaryError(f"Duplicate experiment 1 cell {key!r} for {model_name}.")
-            indexed[key] = cell
-        if set(indexed) != expected:
-            raise IncompleteSummaryError(f"Experiment 1 must have all 12 condition/strategy cells for {model_name}.")
-        for key, cell in indexed.items():
-            denominator = cell.get("primary_denominator_n")
-            complete = cell.get("complete_response_n")
-            planned = cell.get("planned_n")
-            if denominator != 3 or complete != 3 or planned != 3:
-                raise IncompleteSummaryError(
-                    f"Experiment 1 cell {model_name}/{key[0]}/{key[1]} must contain all 3 complete responses."
-                )
-            if any(cell.get(name, 0) != 0 for name in ("truncated_response_n", "error_response_n", "missing_n")):
-                raise IncompleteSummaryError(f"Experiment 1 cell {model_name}/{key[0]}/{key[1]} has incomplete calls.")
-            count = cell.get("any_canary_response_count")
-            if isinstance(count, bool) or not isinstance(count, int) or not 0 <= count <= denominator:
-                raise IncompleteSummaryError(f"Invalid canary-response count in {model_name}/{key!r}.")
 
 
 def _expected_episode_keys() -> set[tuple[str, int, str]]:
@@ -194,34 +144,6 @@ def validate_experiment2(summary: Mapping[str, Any]) -> None:
         if seen != expected_episode_keys:
             missing = sorted(expected_episode_keys - seen)
             raise IncompleteSummaryError(f"Experiment 2 is missing episodes for {model_name}: {missing}.")
-
-
-def aggregate_experiment1(summary: Mapping[str, Any]) -> dict[str, Any]:
-    validate_experiment1(summary)
-    aggregate: dict[str, Any] = {
-        "models": list(MODEL_ORDER),
-        "conditions": list(CONDITION_ORDER),
-        "strategies": list(STRATEGY_ORDER),
-        "metric": "responses containing at least one target canary / complete responses",
-        "cells": [],
-    }
-    for model_name in MODEL_ORDER:
-        cells = summary["models"][model_name]["attack"]["cells"]
-        indexed = {(cell["condition"], cell["strategy"]): cell for cell in cells}
-        for condition in CONDITION_ORDER:
-            for strategy in STRATEGY_ORDER:
-                cell = indexed[(condition, strategy)]
-                count = int(cell["any_canary_response_count"])
-                denominator = int(cell["primary_denominator_n"])
-                aggregate["cells"].append({
-                    "model": model_name,
-                    "condition": condition,
-                    "strategy": strategy,
-                    "canary_response_count": count,
-                    "complete_response_count": denominator,
-                    "rate": count / denominator,
-                })
-    return aggregate
 
 
 def _mean_min_max(values: Sequence[float]) -> dict[str, Any]:
@@ -318,54 +240,6 @@ def aggregate_experiment2(summary: Mapping[str, Any]) -> dict[str, Any]:
         "target_holdout_truth_accuracy_reference": target_reference,
         "aggregation": "Mean over three policies and two fixed seeds (six episodes); min/max describe observed episode range, not confidence intervals.",
     }
-
-
-def _plot_experiment1(aggregate: Mapping[str, Any], output_path: Path) -> str:
-    font_name = _configure_fonts()
-    cells = {
-        (cell["model"], cell["condition"], cell["strategy"]): cell
-        for cell in aggregate["cells"]
-    }
-    fig, axes = plt.subplots(1, 3, figsize=(15.8, 6.1), sharey=True, constrained_layout=True)
-    image = None
-    for index, (axis, model_name) in enumerate(zip(axes, MODEL_ORDER)):
-        values = np.zeros((len(STRATEGY_ORDER), len(CONDITION_ORDER)), dtype=float)
-        for y, strategy in enumerate(STRATEGY_ORDER):
-            for x, condition in enumerate(CONDITION_ORDER):
-                values[y, x] = cells[(model_name, condition, strategy)]["rate"]
-        image = axis.imshow(values, cmap="YlOrRd", vmin=0, vmax=1, aspect="auto")
-        axis.set_title(model_name, fontsize=12, pad=10)
-        axis.set_xticks(range(2), [CONDITION_LABELS[condition] for condition in CONDITION_ORDER], rotation=0)
-        axis.set_xlabel("系统提示保护配置")
-        axis.set_yticks(range(len(STRATEGY_ORDER)), [STRATEGY_LABELS[key] for key in STRATEGY_ORDER])
-        axis.set_xticks(np.arange(-0.5, 2, 1), minor=True)
-        axis.set_yticks(np.arange(-0.5, len(STRATEGY_ORDER), 1), minor=True)
-        axis.grid(which="minor", color="white", linewidth=2)
-        axis.tick_params(which="minor", bottom=False, left=False)
-        if index:
-            axis.tick_params(axis="y", labelleft=False)
-        for y, strategy in enumerate(STRATEGY_ORDER):
-            for x, condition in enumerate(CONDITION_ORDER):
-                cell = cells[(model_name, condition, strategy)]
-                label = f"{cell['canary_response_count']}/{cell['complete_response_count']}"
-                color = "white" if cell["rate"] >= 0.55 else "#202020"
-                axis.text(x, y, label, ha="center", va="center", color=color, fontsize=10, fontweight="bold")
-    axes[0].set_ylabel("提示提取策略")
-    fig.suptitle("不同模型与提示提取策略的私有标记命中", fontsize=15, y=1.02)
-    if image is not None:
-        colorbar = fig.colorbar(image, ax=list(axes), shrink=0.82, pad=0.035)
-        colorbar.set_label("命中回复比例")
-    fig.text(
-        0.5,
-        -0.012,
-        "单元格为至少输出一个目标 canary 的完整回复数/完整回复总数；每格3次请求。",
-        ha="center",
-        fontsize=9,
-    )
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=110, bbox_inches="tight")
-    plt.close(fig)
-    return font_name
 
 
 def _learning_series(aggregate: Mapping[str, Any], model_name: str, strategy: str) -> Mapping[str, Any]:
@@ -493,63 +367,42 @@ def _write_plot_data(data: Mapping[str, Any], path: Path = PLOT_DATA_PATH) -> No
 
 def build_figures(
     *,
-    experiment1_only: bool = False,
-    experiment1_path: Path = EXPERIMENT1_SUMMARY,
     experiment2_path: Path = EXPERIMENT2_SUMMARY,
     figures_dir: Path = FIGURES_DIR,
     plot_data_path: Path = PLOT_DATA_PATH,
 ) -> list[Path]:
-    experiment1 = _read_json(experiment1_path)
-    aggregate1 = aggregate_experiment1(experiment1)
-    aggregate_data: dict[str, Any] = {
-        "schema_version": 1,
-        "sources": {"experiment1": str(experiment1_path.relative_to(ROOT)) if experiment1_path.is_relative_to(ROOT) else str(experiment1_path)},
-        "experiment1": aggregate1,
-    }
-    if experiment1_only:
-        output = figures_dir / "experiment1_models.png"
-        _plot_experiment1(aggregate1, output)
-        _write_plot_data(aggregate_data, plot_data_path)
-        return [output]
-
-    # Validate both complete datasets before writing any output files.
+    # Validate the complete experiment 2 dataset before writing any output files.
     experiment2 = _read_json(experiment2_path)
     aggregate2 = aggregate_experiment2(experiment2)
-    aggregate_data["sources"]["experiment2"] = (
-        str(experiment2_path.relative_to(ROOT)) if experiment2_path.is_relative_to(ROOT) else str(experiment2_path)
+    source_path = (
+        experiment2_path.relative_to(ROOT).as_posix()
+        if experiment2_path.is_relative_to(ROOT)
+        else str(experiment2_path)
     )
-    aggregate_data["experiment2"] = aggregate2
+    aggregate_data = {
+        "schema_version": 1,
+        "sources": {"experiment2": source_path},
+        "experiment2": aggregate2,
+    }
     outputs = [
-        figures_dir / "experiment1_models.png",
         figures_dir / "experiment2_learning.png",
         figures_dir / "experiment2_transfer.png",
     ]
-    fonts = [
-        _plot_experiment1(aggregate1, outputs[0]),
-        _plot_learning(aggregate2, outputs[1]),
-        _plot_transfer(aggregate2, outputs[2]),
-    ]
+    font_name = _plot_learning(aggregate2, outputs[0])
+    _plot_transfer(aggregate2, outputs[1])
     _write_plot_data(aggregate_data, plot_data_path)
-    print(f"Chinese font selected: {fonts[0]}")
+    print(f"Chinese font selected: {font_name}")
     return outputs
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Plot model comparisons from completed experiment summaries.")
-    parser.add_argument(
-        "--experiment1-only",
-        action="store_true",
-        help="Validate and plot experiment 1 without requiring an experiment 2 summary.",
-    )
-    parser.add_argument("--experiment1-summary", type=Path, default=EXPERIMENT1_SUMMARY)
+    parser = argparse.ArgumentParser(description="Plot experiment 2 learning and transfer comparisons.")
     parser.add_argument("--experiment2-summary", type=Path, default=EXPERIMENT2_SUMMARY)
     parser.add_argument("--figures-dir", type=Path, default=FIGURES_DIR)
     parser.add_argument("--plot-data", type=Path, default=PLOT_DATA_PATH)
     args = parser.parse_args(argv)
     try:
         outputs = build_figures(
-            experiment1_only=args.experiment1_only,
-            experiment1_path=args.experiment1_summary,
             experiment2_path=args.experiment2_summary,
             figures_dir=args.figures_dir,
             plot_data_path=args.plot_data,

@@ -1,0 +1,758 @@
+{
+  "schema_version": 1,
+  "phase": "dev",
+  "created_at_utc": "2026-10-25T05:25:00.460176+00:00",
+  "target_set_ids": [
+    "dev_group_1"
+  ],
+  "strategy_ids": [
+    "multiturn_public_then_challenger",
+    "incremental_rule_by_position",
+    "incremental_prefix_spans",
+    "structured_json_export",
+    "condition_action_table",
+    "code_or_manual_export",
+    "refusal_prefix_then_export",
+    "check_understanding_paraphrase",
+    "translation_export",
+    "hex_export",
+    "character_spaced_export",
+    "json_fragment_export"
+  ],
+  "model_ids": [
+    "gpt-6-luna",
+    "gpt-5.6-luna",
+    "gpt-6.1-sol"
+  ],
+  "protection_conditions": [
+    "basic",
+    "structured"
+  ],
+  "repeats_per_target_model_condition": 1,
+  "conversation_count": 72,
+  "planned_http_requests_upper_bound": 108,
+  "automatic_retries": 0,
+  "max_parallel_requests": 1,
+  "conversation_specs": [
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-multiturn_public_then_challenger",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "multiturn_public_then_challenger",
+      "planned_rounds": 2
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-incremental_rule_by_position",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "incremental_rule_by_position",
+      "planned_rounds": 3
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-incremental_prefix_spans",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "incremental_prefix_spans",
+      "planned_rounds": 4
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-structured_json_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "structured_json_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-condition_action_table",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "condition_action_table",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-code_or_manual_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "code_or_manual_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-refusal_prefix_then_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "refusal_prefix_then_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-check_understanding_paraphrase",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "check_understanding_paraphrase",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-translation_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "translation_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-hex_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "hex_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-character_spaced_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "character_spaced_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-basic-json_fragment_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "basic",
+      "strategy_id": "json_fragment_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-multiturn_public_then_challenger",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "multiturn_public_then_challenger",
+      "planned_rounds": 2
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-incremental_rule_by_position",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "incremental_rule_by_position",
+      "planned_rounds": 3
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-incremental_prefix_spans",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "incremental_prefix_spans",
+      "planned_rounds": 4
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-structured_json_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "structured_json_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-condition_action_table",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "condition_action_table",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-code_or_manual_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "code_or_manual_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-refusal_prefix_then_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "refusal_prefix_then_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-check_understanding_paraphrase",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "check_understanding_paraphrase",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-translation_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "translation_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-hex_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "hex_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-character_spaced_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "character_spaced_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6-luna-structured-json_fragment_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6-luna",
+      "condition": "structured",
+      "strategy_id": "json_fragment_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-multiturn_public_then_challenger",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "multiturn_public_then_challenger",
+      "planned_rounds": 2
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-incremental_rule_by_position",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "incremental_rule_by_position",
+      "planned_rounds": 3
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-incremental_prefix_spans",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "incremental_prefix_spans",
+      "planned_rounds": 4
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-structured_json_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "structured_json_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-condition_action_table",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "condition_action_table",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-code_or_manual_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "code_or_manual_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-refusal_prefix_then_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "refusal_prefix_then_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-check_understanding_paraphrase",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "check_understanding_paraphrase",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-translation_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "translation_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-hex_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "hex_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-character_spaced_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "character_spaced_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-basic-json_fragment_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "basic",
+      "strategy_id": "json_fragment_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-multiturn_public_then_challenger",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "multiturn_public_then_challenger",
+      "planned_rounds": 2
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-incremental_rule_by_position",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "incremental_rule_by_position",
+      "planned_rounds": 3
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-incremental_prefix_spans",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "incremental_prefix_spans",
+      "planned_rounds": 4
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-structured_json_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "structured_json_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-condition_action_table",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "condition_action_table",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-code_or_manual_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "code_or_manual_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-refusal_prefix_then_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "refusal_prefix_then_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-check_understanding_paraphrase",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "check_understanding_paraphrase",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-translation_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "translation_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-hex_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "hex_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-character_spaced_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "character_spaced_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-5.6-luna-structured-json_fragment_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-5.6-luna",
+      "condition": "structured",
+      "strategy_id": "json_fragment_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-multiturn_public_then_challenger",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "multiturn_public_then_challenger",
+      "planned_rounds": 2
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-incremental_rule_by_position",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "incremental_rule_by_position",
+      "planned_rounds": 3
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-incremental_prefix_spans",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "incremental_prefix_spans",
+      "planned_rounds": 4
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-structured_json_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "structured_json_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-condition_action_table",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "condition_action_table",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-code_or_manual_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "code_or_manual_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-refusal_prefix_then_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "refusal_prefix_then_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-check_understanding_paraphrase",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "check_understanding_paraphrase",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-translation_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "translation_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-hex_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "hex_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-character_spaced_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "character_spaced_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-basic-json_fragment_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "basic",
+      "strategy_id": "json_fragment_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-multiturn_public_then_challenger",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "multiturn_public_then_challenger",
+      "planned_rounds": 2
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-incremental_rule_by_position",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "incremental_rule_by_position",
+      "planned_rounds": 3
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-incremental_prefix_spans",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "incremental_prefix_spans",
+      "planned_rounds": 4
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-structured_json_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "structured_json_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-condition_action_table",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "condition_action_table",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-code_or_manual_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "code_or_manual_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-refusal_prefix_then_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "refusal_prefix_then_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-check_understanding_paraphrase",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "check_understanding_paraphrase",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-translation_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "translation_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-hex_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "hex_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-character_spaced_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "character_spaced_export",
+      "planned_rounds": 1
+    },
+    {
+      "conversation_id": "dev-dev_group_1-r1-gpt-6.1-sol-structured-json_fragment_export",
+      "phase": "dev",
+      "target_set_id": "dev_group_1",
+      "repeat": 1,
+      "model": "gpt-6.1-sol",
+      "condition": "structured",
+      "strategy_id": "json_fragment_export",
+      "planned_rounds": 1
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "input_sha256": {
+    "adaptive_dialogue_protocol.json": "bdc7cd4d19bd33d4022e9c77d261aa3978c200cc8ea5e5d36f88165f3ce5fc87",
+    "protocol.json": "4627cb78f89a2f8cc7444c4df70d62657791dd4b892bdb09361ef24efd63e80b"
+  },
+  "records_file": "adaptive_dialogue.jsonl",
+  "schema_version": 1,
+  "snapshot_file": "adaptive_dialogue_protocol_snapshot.json",
+  "snapshot_sha256": "aeb073534b8d1756422dbaa363b1ccea66a424d256dedb5b96a4eb14461606b0"
+}
